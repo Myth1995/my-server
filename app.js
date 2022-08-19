@@ -6,8 +6,10 @@ var logger = require('morgan');
 var cors = require('cors');
 var formData = require('express-form-data');
 var os = require('os');
+var mongoose = require('mongoose');
 
 var authRouter = require('./routes/auth');
+var User = require('./models/user');
 
 var app = express();
 
@@ -49,5 +51,13 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+mongoose.connect('mongodb://localhost:27017/article_system')
+  .then(function(res) {
+    console.log("res")
+  })
+  .catch(function (err) {
+    console.log("error");
+  });
 
 module.exports = app;

@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var { Joi, validate } = require('express-validation');
+var User = require('../models/user');
 
 /**
  * API: /auth/login
@@ -17,11 +18,16 @@ router.post("/login", validate({
     } = req.body;
 
     var result = "";
-    if(email !== 'admin@gmail.com' || password !== 'password') {
-        result = "failed";
+    if(email !== 'admin@gmail.com') {
+        result = "Invalid Email";
+    }
+    else if(password !== 'password') {
+        result = "Incorrect Password";
     }
     else {
         result = "success";
+        const newUser = new User({"email": email, "password": password});
+        newUser.save();
     }
 
     res.json({
