@@ -58,10 +58,11 @@ router.post("/register", validate({
         const existOne = await User.findOne({
             email: email
         });
+        console.log(email);
         if(existOne) {
             return res.json({
                 status: false,
-                message: "Already exist"
+                message: "User already exist!"
             })
         }
         const user = new User();
@@ -74,7 +75,7 @@ router.post("/register", validate({
 
         res.json({
             status: true,
-            message: "success"
+            message: "Successfully Registered!"
         });
     }
     catch(e) {
