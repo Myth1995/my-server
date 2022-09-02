@@ -12,27 +12,31 @@ router.post("/login", validate({
         email: Joi.string().email().required(),
         password: Joi.string().regex(/[a-zA-Z0-9]{3,30}/).required()
     })
-}, {}, {}), function (req, res, next) {
+}, {}, {}), async function (req, res, next) {
     const {
         email,
         password
     } = req.body;
 
-    var result = "";
-    if(email !== 'admin@gmail.com') {
-        result = "Invalid Email";
-    }
-    else if(password !== 'password') {
-        result = "Incorrect Password";
+    var result = "", status = false;
+
+    const user = await User.findOne({
+        email: email,
+        password: md5(password)
+    });
+
+    if(!user) {
+        result = "No user!";
+        status = false;
     }
     else {
         result = "success";
-        const newUser = new User({"email": email, "password": md5(password)});
-        newUser.save();
+        status = true;
     }
 
     res.json({
-        data: result
+        status: status,
+        message: result
     });
 });
 
